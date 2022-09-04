@@ -18,6 +18,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.karumi.dexter.Dexter;
@@ -28,23 +29,24 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-boolean isPermissionGranted;
-MapView mapView;
+    boolean isPermissionGranted;
+    MapView mapView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mapView=findViewById(R.id.mapView);
+//        mapView=findViewById(R.id.mapView);
 
         checkPermission();
-        if(isPermissionGranted){
-            if(checkGooglePlayServices()){
+        if (isPermissionGranted) {
+            if (checkGooglePlayServices()) {
                 Toast.makeText(this, "Google Play Services available", Toast.LENGTH_SHORT).show();
-                mapView.getMapAsync(this);
-                mapView.onCreate(savedInstanceState);
-
-            }
-            else{
+//                mapView.getMapAsync(this);
+//                mapView.onCreate(savedInstanceState);
+                SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentMap);
+                supportMapFragment.getMapAsync(this);
+            } else {
                 Toast.makeText(this, "Google Play Services NOT available", Toast.LENGTH_SHORT).show();
             }
         }
@@ -52,13 +54,12 @@ MapView mapView;
     }
 
     private boolean checkGooglePlayServices() {
-        GoogleApiAvailability googleApiAvailability=GoogleApiAvailability.getInstance();
-        int result=googleApiAvailability.isGooglePlayServicesAvailable(this);
-        if(result== ConnectionResult.SUCCESS){
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int result = googleApiAvailability.isGooglePlayServicesAvailable(this);
+        if (result == ConnectionResult.SUCCESS) {
             return true;
-        }
-        else if (googleApiAvailability.isUserResolvableError(result)){
-            Dialog dialog=googleApiAvailability.getErrorDialog(this, result, 201, new DialogInterface.OnCancelListener() {
+        } else if (googleApiAvailability.isUserResolvableError(result)) {
+            Dialog dialog = googleApiAvailability.getErrorDialog(this, result, 201, new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialogInterface) {
                     Toast.makeText(MainActivity.this, "User Cancelled Dialog", Toast.LENGTH_SHORT).show();
@@ -73,15 +74,15 @@ MapView mapView;
         Dexter.withContext(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                isPermissionGranted=true;
+                isPermissionGranted = true;
                 Toast.makeText(MainActivity.this, "Permission Granted", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-                Intent intent=new Intent();
+                Intent intent = new Intent();
                 intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri= Uri.fromParts("package",getPackageName(),"");
+                Uri uri = Uri.fromParts("package", getPackageName(), "");
                 intent.setData(uri);
                 startActivity(intent);
             }
@@ -98,53 +99,47 @@ MapView mapView;
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mapView.onStart();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapView.onResume();
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mapView.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        mapView.onSaveInstanceState(outState);
-    }
-
-    //    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState,) {
-//        super.onSaveInstanceState(outState);
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        mapView.onStart();
+//
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        mapView.onResume();
+//
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        mapView.onPause();
+//    }
+//
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        mapView.onStop();
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        mapView.onDestroy();
+//    }
+//
+//    @Override
+//    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+//        super.onSaveInstanceState(outState, outPersistentState);
 //        mapView.onSaveInstanceState(outState);
 //    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
+//
+//    @Override
+//    public void onLowMemory() {
+//        super.onLowMemory();
+//        mapView.onLowMemory();
+//    }
 }
