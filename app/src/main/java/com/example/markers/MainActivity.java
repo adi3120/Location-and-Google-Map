@@ -31,6 +31,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     boolean isPermissionGranted;
     MapView mapView;
+    GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +97,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        googleMap=googleMap;
+        LatLng latLng=new LatLng(23.2069136,80.0098011);
+        LatLng latLng1=new LatLng(40.2069136,80.0098011);
+        LatLng latLng3=new LatLng(3.2069136,80.0098011);
 
+
+        MarkerOptions markerOptions=new MarkerOptions();
+        markerOptions.title("My Location");
+        markerOptions.position(latLng);
+        googleMap.addMarker(markerOptions);
+        markerOptions.position(latLng1);
+        googleMap.addMarker(markerOptions);
+        markerOptions.position(latLng3);
+        googleMap.addMarker(markerOptions);
     }
 
 //    @Override
